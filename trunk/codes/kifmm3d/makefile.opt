@@ -1,0 +1,50 @@
+PETSC_DIR = /home/arvind/install/petsc-3.1-p4
+PETSC_ARCH = linux-gnu-cxx-debug
+include $(PETSC_DIR)/conf/variables
+
+LIBS = -Wl,-rpath,${PETSC_DIR}/lib/lib${BOPT}/${PETSC_ARCH} ${PETSC_LIB} \
+	-lfftw3 -llapack -lblas -L/usr/local/mpich-1.2.7/lib -lmpich -lstdc++
+# ----------------------------machine dependent file
+MODE = debug
+#MODE = optim
+
+# compiler and linker variable 
+INCLUDES = -I..
+
+#LIBS = -lfftw3 -llapack -lblas
+LIBS = -lfftw3 $(PETSC_LIB)
+
+AR = ar
+ARFLAGS = -r
+
+CC  = gcc
+CXX = g++
+
+# -Wall -Wno-sign-compare 
+CFLAGS   = -g -W -Wno-sign-compare -Wno-unused-label -MMD ${INCLUDES}
+CXXFLAGS = -g -W -Wno-sign-compare -Wno-unused-label -MMD ${INCLUDES}
+ifeq ($(MODE),debug)
+else
+	CFLAGS 	+= -O -DNDEBUG
+	CXXFLAGS += -O -DNDEBUG
+endif
+
+LDFLAGS = ${LIBS}
+
+MEX = mex
+
+RANLIB = ranlib
+
+# rules
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $*.cpp
+
+#------------------------------------------------------
+tilde:
+	rm -f *~
+
+clean:
+	rm -rf *~ *.d *.o *.out *.a tt tt0 tt1
+
+tags:
+	etags *.hpp *.cpp
