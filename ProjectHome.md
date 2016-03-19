@@ -1,0 +1,1 @@
+Implements Kriging system of equations for linear inversion for unstructured grids and makes use of Fast Multipole Method to accelerate Matrix-Vector products.
